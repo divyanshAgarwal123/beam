@@ -61,6 +61,13 @@ export async function loadPending(): Promise<PendingTx | null> {
 }
 
 /**
+ * One finalization at a time. The open sheet and a resumed pending check can
+ * both see the same receipt, and the slot is cleared before spend is written,
+ * so overlapping calls would apply one payment twice or drop the next one's spend.
+ */
+let finalizeChain: Promise<void> = Promise.resolve();
+
+/**
  * Applies a receipt: on success adds spend and recipient, remembers the name's
  * address (`names:v1`) and marks the intent executed; either way appends to the activity list and clears the slot. Idempotent: does
  * nothing if the slot no longer holds this hash (already finalized elsewhere).
@@ -68,7 +75,23 @@ export async function loadPending(): Promise<PendingTx | null> {
  * @param status Receipt status.
  * @returns Resolves once stored.
  */
-export async function finalizePending(tx: PendingTx, status: 'success' | 'reverted'): Promise<void> {
+export function finalizePending(tx: PendingTx, status: 'success' | 'reverted'): Promise<void> {
+  const run = finalizeChain.then(() => commitPending(tx, status));
+  // A rejection must not wedge later payments; the caller still sees it.
+  finalizeChain = run.then(
+    () => undefined,
+    () => undefined,
+  );
+  return run;
+}
+
+/**
+ * Writes the receipt's bookkeeping. Caller serializes this.
+ * @param tx The payment.
+ * @param status Receipt status.
+ * @returns Resolves once stored.
+ */
+async function commitPending(tx: PendingTx, status: 'success' | 'reverted'): Promise<void> {
   if ((await loadPending())?.hash !== tx.hash) return;
   await removeKey(KEYS.pending);
   const confirmed = status === 'success';

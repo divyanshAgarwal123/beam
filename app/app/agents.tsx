@@ -103,7 +103,7 @@ export default function AgentsScreen() {
       <View style={styles.section}>
         <SectionHeader title="Connect an agent" />
         <Card>
-          <Text variant="bodyStrong">1. Start Beam's MCP server</Text>
+          <Text variant="bodyStrong">{"1. Start Beam's MCP server"}</Text>
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={`Copy command ${MCP_COMMAND}`}

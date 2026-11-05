@@ -7,8 +7,10 @@
     "android": "expo run:android",
     "android:release": "expo run:android --variant release",
     "prebuild": "expo prebuild --platform android --clean",
+    "dev": "expo start",
     "typecheck": "tsc --noEmit",
     "lint": "expo lint",
+    "test": "vitest run",
     "ios": "expo run:ios"
   },
   "dependencies": {
@@ -58,7 +60,13 @@
     "@types/react": "~19.0.10",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
-    "typescript": "~5.8.3"
+    "typescript": "~5.8.3",
+    "vitest": "^5.0.5"
+  },
+  "pnpm": {
+    "overrides": {
+      "ws@>=8.0.0 <8.22.0": "8.22.0"
+    }
   },
   "private": true
 }

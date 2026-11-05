@@ -3,9 +3,9 @@
  * World ID link), Beam handle, server status, pending payment, activity and
  * the daily limit, loaded once in the tabs layout.
  *
- * One provider (instead of one fetch per tab) keeps the tabs in sync and
- * makes sure the pending slot is resumed by a single caller, so a settled
- * payment is never finalized twice.
+ * One provider (instead of one fetch per tab) keeps the tabs in sync.
+ * The Ask sheet resumes the same slot on its own; `finalizePending` runs those
+ * callers one at a time so a settled payment is applied once.
  */
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
 import { AppState } from 'react-native';

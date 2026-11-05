@@ -123,6 +123,14 @@ describe('config: production refusals', () => {
     expect(errors.join(' ')).not.toContain(token);
   });
 
+  it('warns in development when AGENT_TOKEN is the example default, without echoing it', async () => {
+    const r = await loadServerConfig({ ...base, AGENT_TOKEN: 'change-me' });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.warnings.join(' ')).toContain('EXPO_PUBLIC_AGENT_TOKEN');
+    expect(r.warnings.join(' ')).not.toContain('change-me');
+  });
+
   it('missing keys are refused: Anthropic key, approver key and salt with World on', async () => {
     const { ANTHROPIC_API_KEY: _, ...noKey } = prod;
     expect(await errorsOf(noKey)).toEqual(['ANTHROPIC_API_KEY: is required in production']);

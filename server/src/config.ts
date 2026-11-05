@@ -166,6 +166,9 @@ export async function loadServerConfig(env: Env): Promise<ConfigResult<ServerCon
 
   if (production && (e.AGENT_TOKEN === 'change-me' || e.AGENT_TOKEN.length < MIN_PROD_TOKEN_CHARS)) {
     errors.push(`AGENT_TOKEN: too weak for production (use ${MIN_PROD_TOKEN_CHARS}+ random characters)`);
+  } else if (e.AGENT_TOKEN === 'change-me') {
+    // The app reads the same secret from EXPO_PUBLIC_AGENT_TOKEN, which is compiled into the APK.
+    warnings.push('AGENT_TOKEN is still the example default. The app ships that same value inside the APK as EXPO_PUBLIC_AGENT_TOKEN.');
   }
   if (!e.ANTHROPIC_API_KEY) {
     if (production) errors.push('ANTHROPIC_API_KEY: is required in production');

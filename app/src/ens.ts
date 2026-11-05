@@ -37,7 +37,7 @@ export const DEFAULT_ENS_RPC: Record<EnsChain, string> = {
 
 // Candidate `.eth` names: dot-separated labels ending in ".eth", starting after whitespace or opening
 // punctuation (so emails like a@b.eth and URLs like x.eth.limo don't match). Leading guard instead of a lookbehind (Hermes-safe).
-const NAME_CANDIDATE = /(?:^|[\s(\[{<"'“‘,;:!?])((?:[\p{L}\p{N}_-]+\.)+eth)(?![\p{L}\p{N}_-]|\.[\p{L}\p{N}])/giu;
+const NAME_CANDIDATE = /(?:^|[\s([{<"'“‘,;:!?])((?:[\p{L}\p{N}_-]+\.)+eth)(?![\p{L}\p{N}_-]|\.[\p{L}\p{N}])/giu;
 
 /**
  * Normalizes a candidate name (ENSIP-15).
