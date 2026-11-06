@@ -7,7 +7,7 @@
     <title>Beam — Your screen. Your wallet. Your call.</title>
     <meta
       name="description"
-      content="Beam turns payment details on your Android screen into test USDC payments on Arc, with ENS recipients and World ID approvals."
+      content="Beam turns payment details on your Android screen into EVM payment simulations, with ENS recipients and World ID approvals."
     />
     <link rel="canonical" href="__SITE_URL__/" />
     <meta
@@ -16,7 +16,7 @@
     />
     <meta
       property="og:description"
-      content="Beam turns payment details on your Android screen into test USDC payments on Arc, with ENS recipients and World ID approvals."
+      content="Beam turns payment details on your Android screen into EVM payment simulations, with ENS recipients and World ID approvals."
     />
 
     <meta name="twitter:card" content="summary" />
@@ -66,7 +66,7 @@
           <h1>Your screen.<br />Your wallet.<br /><span>Your call.</span></h1>
           <div class="hero-intro">
             <p>
-              Pay from the screen you’re on. <br />Send test USDC on Arc. <br />Review the request yourself.
+              Pay from the screen you’re on. <br />Explore EVM payments. <br />Review the request yourself.
             </p>
             <div class="actions">
               <a class="button" href="/download/"
@@ -79,7 +79,7 @@
                   <use href="/assets/icons.svg#player-play" /></svg
               ></a>
             </div>
-            <p class="fine">Android prototype · Arc Testnet · ETHGlobal Mumbai</p>
+            <p class="fine">Android prototype · EVM testnet · ETHGlobal Mumbai</p>
           </div>
         </div>
         <figure class="product-demo" id="product-demo">
@@ -103,7 +103,7 @@
             <div>
               <p>Open a conversation with an amount and recipient, then tap the floating Beam. It reads the visible text exposed by Android. You can paste details if the app hides its text.</p>
               <p>Review the amount and ENS recipient. The device resolves the name again and checks the payment. A request above the cap, to certain new recipients or from an external agent can require World ID.</p>
-              <p>Confirm separately on your phone. BeamPay routes the payment on Arc Testnet. The preview above uses sample messages and receipts.</p>
+              <p>Confirm separately on your phone. BeamPay routes the payment on the configured testnet. The preview above uses sample messages and receipts.</p>
             </div>
           </details>
         </figure>
@@ -112,8 +112,7 @@
         <div class="section-heading">
           <h2>Now, take it<br />for a spin.</h2>
           <p>
-            Try a sample payment in WhatsApp, email or Telegram. No wallet or
-            funds needed.
+            Choose an example EVM network and amount, then try a sample payment in WhatsApp, email or Telegram.
           </p>
         </div>
         <div>
@@ -125,7 +124,7 @@
           </div>
         </div>
         <div class="capability-strip beam-partner-strip" aria-label="Beam technologies">
-          <span><img src="/assets/arc.svg" alt="" width="17" height="17" /> Arc Testnet</span>
+          <span><svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#network" /></svg> EVM payment flow</span>
           <span><img src="/assets/ens.svg" alt="" width="17" height="17" /> ENS recipients</span>
           <span><img src="/assets/world.svg" alt="" width="17" height="17" /> World ID approvals</span>
           <span><svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#brand-android" /></svg> Made for Android</span>
@@ -222,7 +221,7 @@
             <div>
               <h3>The network is explicit.</h3>
               <p>
-                Beam sends on Arc Testnet. The wallet’s mainnet switch is for viewing balances.
+                The review shows the selected network. The Android app uses its configured payment network.
               </p>
             </div>
           </article>
@@ -262,7 +261,7 @@
         <div class="faq-list">
           <details data-topic="Using Beam">
             <summary>What is Beam?<span aria-hidden="true">+</span></summary>
-            <div class="faq-answer"><p>Beam is an Android wallet with a floating button over other apps. Tap it to read visible text, check a suspicious message or prepare a test USDC payment. You review and confirm before anything is sent.</p></div>
+            <div class="faq-answer"><p>Beam is an Android wallet with a floating button over other apps. Tap it to read visible text, check a suspicious message or prepare a test payment. You review and confirm before anything is sent.</p></div>
           </details>
           <details data-topic="Using Beam">
             <summary>Does it work in WhatsApp, email and Telegram?<span aria-hidden="true">+</span></summary>
@@ -270,7 +269,7 @@
           </details>
           <details data-topic="Payments">
             <summary>What network does Beam pay on?<span aria-hidden="true">+</span></summary>
-            <div class="faq-answer"><p>This build sends test USDC on Arc Testnet through BeamPay. The mainnet wallet view displays balances only.</p></div>
+            <div class="faq-answer"><p>The browser demo lets you compare EVM testnets. The Android app uses the single payment network supported by its source build.</p></div>
           </details>
           <details data-topic="Payments">
             <summary>Can I pay someone by ENS name?<span aria-hidden="true">+</span></summary>
@@ -278,7 +277,7 @@
           </details>
           <details data-topic="Payments">
             <summary>When do I need World ID?<span aria-hidden="true">+</span></summary>
-            <div class="faq-answer"><p>Beam asks for World ID when a payment is above your cap, comes from an external agent, goes to a new recipient for 10 USDC or more, or a previously paid ENS name points to a different address. You still confirm on your phone.</p></div>
+            <div class="faq-answer"><p>Beam asks for World ID when a payment is above your cap, comes from an external agent, meets the threshold for a first-time recipient, or a previously paid ENS name points to a different address. You still confirm on your phone.</p></div>
           </details>
           <details data-topic="Safety">
             <summary>Can Scam Shield guarantee a payment is safe?<span aria-hidden="true">+</span></summary>
@@ -315,7 +314,7 @@
               <svg class="icon" aria-hidden="true">
                 <use href="/assets/icons.svg#arrow-down" /></svg
             ></a>
-            <p>Android source · Arc Testnet setup</p>
+            <p>Android source · EVM testnet setup</p>
             <a href="/download/#release-notes" class="text-link"
               >What’s in the prototype
               <svg class="icon" aria-hidden="true">
@@ -337,7 +336,7 @@
         ><a href="/privacy.html">Privacy & permissions</a
         ><a href="/#faq">Questions?</a>
       </div>
-      <small>Beam · ETHGlobal Mumbai prototype · Arc Testnet</small>
+      <small>Beam · ETHGlobal Mumbai prototype · EVM testnet</small>
     </footer>
     <script type="module" src="/assets/interactions.js"></script>
   </body>

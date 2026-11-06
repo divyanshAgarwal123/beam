@@ -101,9 +101,11 @@ components:
     rounded: "{rounded.field}"
     padding: "12px 18px"
     height: "44px"
+  demo-frame:
+    backgroundColor: "{colors.ink}"
+    rounded: "{rounded.panel}"
   preview-player:
     backgroundColor: "{colors.preview}"
-    rounded: "{rounded.panel}"
   preview-controls:
     backgroundColor: "{colors.terminal}"
     textColor: "{colors.canvas}"
@@ -142,7 +144,7 @@ Use 14px corners on standard buttons, 16px on panels and 12px on fields and comp
 
 - **Actions and navigation.** Primary buttons use ink and secondary buttons use cool gray. Text links and small header actions retain 44px targets. The global keyboard ring is 3px in Link Blue. The motion control exposes its pressed state.
 - **Guided preview.** The original media frame contains a four-step player with a two-column stage, a phone illustration and a dark control bar. The stage covers capture, payment review, World ID and device confirmation. Play, pause, replay, named step controls and a native transcript disclosure support exploration. Global pause stops automatic advancement and leaves step controls available.
-- **Phone playground and agent approval.** Show sample amount, recipient, network, risk and approval status in the review. Where needed, World ID comes before a separate device confirmation. Keep cancel, reset and receipt actions available at their relevant stages.
+- **Phone playground and agent approval.** Show sample amount, recipient, network, risk and approval status in the review. Where needed, World ID comes before a separate device confirmation. Keep cancel, reset and receipt actions available at their relevant stages. The playground uses two groups of 44px controls for sample network and amount. The summary displays the selected chain ID and approval path. Changing an input resets the example before a new review.
 - **Feature explorer.** Pay, Check, ENS and World ID each have a reversible sample interaction. The World ID scene uses the inherited ink panel with a white mark tile and simulates approval. GSAP pins the explorer on motion-enabled screens at least 1000px wide and 650px high with hover and a fine pointer. Other conditions use native horizontal snapping. Arrows, named jumps and keyboard navigation remain available.
 - **Android setup.** Use the inherited cool-gray action panel for the source build instructions and requirements disclosure. Numbered checkbox rows, dividers and a live count communicate progress, which stays in the current browser.
 

@@ -6,7 +6,7 @@ const frames = [
     title: "Pay from the screen you’re on.",
     caption: "Tap the floating Beam while the payment details are visible.",
     label: "Capture",
-    detail: "Coffee was $8.50. Send it to maya.eth?",
+    detail: "Coffee was 0.0085 ETH. Send it to maya.eth?",
     icon: "scan",
     partner: "ens",
   },
@@ -14,25 +14,25 @@ const frames = [
     title: "See where it goes.",
     caption: "Beam resolves the ENS name and shows the amount and recipient for review.",
     label: "Review payment",
-    detail: "8.50 USDC to maya.eth",
+    detail: "0.0085 ETH to maya.eth",
     icon: "list-details",
     partner: "ens",
   },
   {
     title: "Some requests need World ID.",
-    caption: "A 42 USDC sample exceeds the per-payment cap. World ID adds a human approval step.",
+    caption: "A 0.042 ETH sample exceeds the per-payment cap. World ID adds a human approval step.",
     label: "World ID required",
-    detail: "42.00 USDC to studio.eth",
+    detail: "0.042 ETH to studio.eth",
     icon: "fingerprint",
     partner: "world",
   },
   {
     title: "Confirm on your phone.",
-    caption: "The phone signs after review. BeamPay routes the payment on Arc Testnet.",
+    caption: "The phone signs after review. BeamPay routes the payment on an EVM testnet.",
     label: "Sample receipt",
-    detail: "42.00 USDC · Arc Testnet",
+    detail: "0.042 ETH · EVM testnet",
     icon: "circle-check",
-    partner: "arc",
+    partner: null,
   },
 ];
 
@@ -85,11 +85,11 @@ export default function ProductPreview({ motion, Icon, Mark }) {
         <div className="preview-device" aria-hidden="true">
           <div className="preview-device-top"><span>9:41</span><i /><Icon name="battery-3" /></div>
           <div className="preview-device-body">
-            <img src={`/assets/${frame.partner}.svg`} alt="" width="30" height="30" />
+            {frame.partner ? <img src={`/assets/${frame.partner}.svg`} alt="" width="30" height="30" /> : <Icon name="circle-check" />}
             <b>{frame.label}</b>
             <span>{frame.detail}</span>
           </div>
-          <div className="preview-device-button"><Icon name={frame.icon} /> <span>{index === 0 ? "Tap Beam" : "Arc Testnet"}</span></div>
+          <div className="preview-device-button"><Icon name={frame.icon} /> <span>{index === 0 ? "Tap Beam" : "EVM testnet"}</span></div>
         </div>
       </div>
       {!started && (

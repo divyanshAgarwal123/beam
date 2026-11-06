@@ -56,33 +56,50 @@ function FeatureExperience() {
   return <FeatureJourney motion={motion} Icon={Icon} Mark={Mark} />;
 }
 
+const NETWORKS = [
+  { name: "Ethereum Sepolia", chainId: 11155111 },
+  { name: "Base Sepolia", chainId: 84532 },
+];
+const AMOUNTS = [
+  { label: "0.0085", microEth: 8500 },
+  { label: "0.012", microEth: 12000 },
+  { label: "0.042", microEth: 42000 },
+];
+const SAMPLE_CAP_MICRO_ETH = 25000;
+const SAMPLE_FIRST_PAYMENT_MICRO_ETH = 10000;
 const APPS = [
   {
     name: "WhatsApp", icon: "brand-whatsapp", person: "Maya", initial: "M",
-    context: "Coffee crew",
-    message: "Coffee was a good call. Your half is $8.50. Send it to maya.eth?",
-    reply: "On it. Let me ask Beam.",
-    amount: "8.50", recipient: "maya.eth", memo: "Coffee, covered.",
+    context: "Coffee crew", recipient: "maya.eth", memo: "Coffee, covered.",
+    request: "Coffee was a good call. Your half is",
+    reply: "On it. Let me ask Beam.", initialAmount: 0,
   },
   {
     name: "Email", icon: "mail", person: "Arjun", initial: "A",
-    context: "Design review",
-    message: "Thanks for the review! Please send 42 USDC to studio.eth for the session.",
-    reply: "I’ll check it in Beam.",
-    amount: "42.00", recipient: "studio.eth", memo: "Design review",
-    approval: "Above the sample 25 USDC per-payment cap.",
+    context: "Design review", recipient: "studio.eth", memo: "Design review",
+    request: "Thanks for the review! The session was",
+    reply: "I’ll check it in Beam.", initialAmount: 2,
   },
   {
     name: "Telegram", icon: "brand-telegram", person: "Anika", initial: "A",
-    context: "Weekend plans",
-    message: "Your share for dinner is 12 USDC. Can you send it to anika.eth?",
-    reply: "Let me check the request.",
-    amount: "12.00", recipient: "anika.eth", memo: "Dinner split",
-    approval: "First payment of 10 USDC or more to this recipient.",
+    context: "Weekend plans", recipient: "anika.eth", memo: "Dinner split",
+    request: "Your share for dinner is",
+    reply: "Let me check the request.", initialAmount: 1, firstPayment: true,
   },
 ];
+
+function approvalReason(amount, firstPayment) {
+  if (amount.microEth > SAMPLE_CAP_MICRO_ETH) return "Above the sample 0.025 ETH per-payment cap.";
+  if (firstPayment && amount.microEth >= SAMPLE_FIRST_PAYMENT_MICRO_ETH) {
+    return "First payment of 0.01 ETH or more to this sample recipient.";
+  }
+  return "";
+}
+
 function Playground() {
   const [app, setApp] = useState(0),
+    [networkIndex, setNetworkIndex] = useState(0),
+    [amountIndex, setAmountIndex] = useState(APPS[0].initialAmount),
     [phase, setPhase] = useState("screen"),
     [step, setStep] = useState(0),
     [keyboard, setKeyboard] = useState(false),
@@ -92,7 +109,11 @@ function Playground() {
     phone = useRef(null),
     timer = useRef(null),
     sheet = useRef(null),
-    a = APPS[app];
+    a = APPS[app],
+    network = NETWORKS[networkIndex],
+    amount = AMOUNTS[amountIndex],
+    approval = approvalReason(amount, a.firstPayment),
+    message = `${a.request} ${amount.label} ETH. Send it to ${a.recipient}?`;
   const previousPhase = useRef(phase);
   useReveal(sheet, phase, motion);
   useEffect(() => {
@@ -103,9 +124,8 @@ function Playground() {
     clearTimeout(timer.current);
     timer.current = null;
   };
-  const reset = (index = app) => {
+  const reset = () => {
     clear();
-    setApp(index);
     setPhase("screen");
     setStep(0);
     setSpin(false);
@@ -144,7 +164,7 @@ function Playground() {
     timer.current = setTimeout(() => {
       setPhase("review");
       setStep(2);
-      if (guided && !a.approval) timer.current = setTimeout(pay, 1800);
+      if (guided && !approval) timer.current = setTimeout(pay, 1800);
       else setTour(false);
     }, 650);
   };
@@ -180,6 +200,44 @@ function Playground() {
         </span>
         <span className="demo-label">Interactive demo · no funds sent</span>
       </div>
+      <div className="playground-config">
+        <fieldset>
+          <legend>Sample network</legend>
+          <div className="demo-choices">
+            {NETWORKS.map((item, i) => (
+              <button key={item.chainId} type="button" aria-pressed={networkIndex === i}
+                onClick={() => {
+                  if (networkIndex === i) return;
+                  reset();
+                  setNetworkIndex(i);
+                }}>
+                {item.name}
+              </button>
+            ))}
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Sample amount</legend>
+          <div className="demo-choices">
+            {AMOUNTS.map((item, i) => (
+              <button key={item.label} type="button" aria-pressed={amountIndex === i}
+                onClick={() => {
+                  if (amountIndex === i) return;
+                  reset();
+                  setAmountIndex(i);
+                }}>
+                {item.label} ETH
+              </button>
+            ))}
+          </div>
+        </fieldset>
+        <p className="demo-choice-status" role="status">
+          <span>Chain ID {network.chainId} · browser simulation</span>
+          <strong><Icon name={approval ? "shield-check" : "fingerprint"} />
+            {approval ? "World ID + phone confirmation" : "Phone confirmation"}
+          </strong>
+        </p>
+      </div>
       <div className="playground-grid">
         <div className="screen-context">
           <div className="app-picker" role="group" aria-label="Sample app">
@@ -188,7 +246,11 @@ function Playground() {
                 key={item.name}
                 aria-label={item.name}
                 aria-pressed={app === i}
-                onClick={() => reset(i)}
+                onClick={() => {
+                  reset();
+                  setApp(i);
+                  setAmountIndex(item.initialAmount);
+                }}
               >
                 <Icon name={item.icon} />
                 <span>{item.name}</span>
@@ -205,7 +267,7 @@ function Playground() {
               <Icon name={a.icon} />
             </div>
             <div className="chat-message">
-              {a.message}
+              {message}
               <small>9:40</small>
             </div>
             <div className="chat-reply">
@@ -272,7 +334,7 @@ function Playground() {
                   <div className="phone-chat">
                     <small>Today</small>
                     <div className="chat-message">
-                      {a.message}
+                      {message}
                       <small>9:40</small>
                     </div>
                     <div className="chat-reply">{a.reply}</div>
@@ -299,7 +361,7 @@ function Playground() {
                       <span>
                         <Mark />
                         <b>Beam</b>
-                        <span className="testnet">Arc Testnet</span>
+                        <span className="testnet">{network.name}</span>
                       </span>
                       <button
                         className="icon-button"
@@ -331,10 +393,10 @@ function Playground() {
                           <Icon name="check" />
                         </span>
                         <h3>All set.</h3>
-                        <p>{a.amount} USDC to {a.recipient}</p>
+                        <p>{amount.label} ETH to {a.recipient}</p>
                         <div className="receipt">
                           <b>{a.memo}</b>
-                          <small>Payment simulated · Arc Testnet</small>
+                          <small>Payment simulated · {network.name}</small>
                         </div>
                         <button
                           className="button"
@@ -342,7 +404,7 @@ function Playground() {
                             const btn = e.currentTarget;
                             try {
                               await navigator.clipboard.writeText(
-                                `Beam demo receipt — ${a.amount} USDC to {a.recipient} on Arc Testnet. SIMULATED. No funds sent.`,
+                                `Beam demo receipt — ${amount.label} ETH to {a.recipient} on ${network.name} (chain ${network.chainId}). SIMULATED. No funds sent.`,
                               );
                               btn.textContent = "Sample receipt copied";
                             } catch {
@@ -368,23 +430,23 @@ function Playground() {
                       <div className="phone-review">
                         <p className="review-caption">{phase === "world" ? "World ID approval" : "Review payment"}</p>
                         <h3>
-                          {a.amount} <span>USDC</span>
+                          {amount.label} <span>ETH</span>
                         </h3>
                         <p>
                           to <strong>{a.recipient}</strong>
                         </p>
                         <span className="mono">0x7a…9B2e · sample address</span>
-                        {a.approval && (
+                        {approval && (
                           <div className={`risk-label ${phase === "ready" ? "safe" : "warning"}`}>
                             <img src="/assets/world.svg" alt="" width="16" height="16" />
                             <b>{phase === "ready" ? "Sample World ID approved" : "World ID required"}</b>
                           </div>
                         )}
-                        {a.approval && phase !== "ready" && <p className="fine approval-reason">{a.approval}</p>}
+                        {approval && phase !== "ready" && <p className="fine approval-reason">{approval}</p>}
                         <dl>
                           <div>
                             <dt>Network</dt>
-                            <dd>Arc Testnet</dd>
+                            <dd>{network.name}</dd>
                           </div>
                           <div>
                             <dt>For</dt>
@@ -393,12 +455,12 @@ function Playground() {
                         </dl>
                         <button className="button" onClick={() => {
                           if (phase === "world") setPhase("ready");
-                          else if (a.approval && phase !== "ready") setPhase("world");
+                          else if (approval && phase !== "ready") setPhase("world");
                           else pay();
                         }}>
                           <Icon name={phase === "world" ? "check" : "fingerprint"} />
                           {phase === "world" ? "Simulate World ID approval" :
-                            a.approval && phase !== "ready" ? "Review World ID step" : "Simulate payment"}
+                            approval && phase !== "ready" ? "Review World ID step" : "Simulate payment"}
                         </button>
                         <button className="text-button" onClick={() => phase === "world" ? setPhase("declined") : reset()}>
                           {phase === "world" ? "Decline" : "Cancel"}
@@ -444,7 +506,7 @@ function Playground() {
             <span className="agent-mini">
               <Icon name="terminal-2" /> Agent request
             </span>
-            <p>“Pay 6 USDC for API credits.”</p>
+            <p>“Pay 0.006 ETH for API credits.”</p>
             <span>Waiting for your approval</span>
           </div>
         </aside>
@@ -480,7 +542,7 @@ const SAFETY = [
     kind: "safe",
     icon: "shield-check",
     message:
-      "Your half is 8.50 USDC. Send it to maya.eth for coffee?",
+      "Your half is 0.0085 ETH. Send it to maya.eth for coffee?",
     signals: [
       "No common warning signs in this sample.",
       "Still check the recipient, amount and network.",
@@ -505,7 +567,7 @@ const SAFETY = [
     kind: "danger",
     icon: "shield-x",
     message:
-      "To receive your refund, install AnyDesk and pay a 10 USDC processing fee. Share your recovery phrase to verify.",
+      "To receive your refund, install AnyDesk and pay a 0.01 ETH processing fee. Share your recovery phrase to verify.",
     signals: [
       "Asks for a secret recovery phrase.",
       "Requests remote-access software.",
@@ -570,8 +632,7 @@ function Agents() {
     [state, setState] = useState("idle"),
     [copy, setCopy] = useState(false);
   const env = {
-    BEAM_NETWORK: "arc",
-    BEAMPAY_ADDRESS: "<testnet-contract>",
+    BEAMPAY_ADDRESS: "<configured-contract>",
     MCP_WALLET_ADDRESS: "<wallet-address>",
   };
   const server = { command: "node", args: ["/path/to/beam/server/dist/mcp.js"], env };
@@ -579,8 +640,7 @@ function Agents() {
   const snippet = client === 0 ? JSON.stringify({ mcpServers: { beam: server } }, null, 2)
     : client === 1 ? [
         "codex mcp add beam",
-        "--env BEAM_NETWORK=arc",
-        "--env BEAMPAY_ADDRESS='<testnet-contract>'",
+        "--env BEAMPAY_ADDRESS='<configured-contract>'",
         "--env MCP_WALLET_ADDRESS='<wallet-address>'",
         "-- node /path/to/beam/server/dist/mcp.js",
       ].join(continuation)
@@ -629,13 +689,13 @@ function Agents() {
         </button>
         <p>
           Build the server first, then configure your client to launch it over
-          stdio. Replace the sample paths and addresses.
+          stdio. Use the contract address for your configured network.
         </p>
         <div className="agent-limit">
           <span>Per-payment limit</span>
-          <b>25 USDC</b>
+          <b>0.025 ETH</b>
           <span>MCP daily limit</span>
-          <b>100 USDC</b>
+          <b>0.10 ETH</b>
         </div>
         <small>Sample configuration · external requests require World ID</small>
       </div>
@@ -660,14 +720,14 @@ function Agents() {
           {state === "idle"
             ? "Your agent asks. You decide."
             : state === "pending"
-              ? "API credits. 6 USDC."
+              ? "API credits. 0.006 ETH."
               : "Your decision makes the difference."}
         </h3>
         <p>
           {state === "idle"
             ? "Try a local example of an agent requesting payment. No key or wallet required."
             : state === "pending"
-              ? "The agent proposes 6 USDC to studio.eth on Arc Testnet. Open the review link and approve with your linked World ID."
+              ? "The agent proposes 0.006 ETH to studio.eth on the sample EVM testnet. Open the review link and approve with your linked World ID."
               : state === "declined"
                 ? "The phone stopped the request before confirmation."
                 : state === "ready"
@@ -712,20 +772,20 @@ const STEPS = [
     title: "Bring the details into view.",
     body: "Open a message, email or another screen with an amount and recipient. If an app hides its text from accessibility, copy the details instead.",
     icon: "message-circle",
-    preview: "“Send 8.50 USDC to maya.eth on testnet.”",
+    preview: "“Send 0.0085 ETH to maya.eth on testnet.”",
   },
   {
     title: "Tap the floating Beam.",
     body: "Beam reads accessible visible text on demand. Ask “pay this” or “is this safe?” You can inspect and exclude the captured text.",
     icon: "scan",
-    preview: "Amount  8.50 USDC\nRecipient  maya.eth\nNetwork  Arc Testnet",
+    preview: "Amount  0.0085 ETH\nRecipient  maya.eth\nNetwork  EVM testnet",
   },
   {
     title: "Review before you approve.",
     body: "Check the recipient, amount and risk signals. Over-cap, first-time and external-agent requests can ask for World ID before device confirmation.",
     icon: "fingerprint",
     preview:
-      "Review payment\n8.50 USDC → maya.eth\nLooks safe · Check every detail",
+      "Review payment\n0.0085 ETH → maya.eth\nLooks safe · Check every detail",
   },
   {
     title: "Get back to the conversation.",

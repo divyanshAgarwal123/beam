@@ -1397,3 +1397,71 @@
     gap: 22px;
   }
 }
+
+.playground-config {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 24px;
+  padding: 18px 28px;
+  border-bottom: 1px solid var(--border-strong);
+}
+.playground-config fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.playground-config legend {
+  padding: 0;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+.demo-choices {
+  display: flex;
+  gap: 6px;
+}
+.demo-choices button {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 6px 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1.25;
+}
+.demo-choices button:hover { background: var(--canvas); }
+.demo-choices button[aria-pressed="true"] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--canvas);
+}
+.demo-choice-status {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.demo-choice-status strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink);
+  font-weight: 500;
+}
+.demo-choice-status .icon { width: 16px; height: 16px; }
+@media (max-width: 600px) {
+  .playground-config {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 14px 12px;
+  }
+}
