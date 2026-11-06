@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import TiltedCard from "./react-bits/TiltedCard.jsx";
+import CountUp from "./react-bits/CountUp.jsx";
+import SpotlightCard from "./react-bits/SpotlightCard.jsx";
 import "./site.css";
 import FeatureJourney from "./FeatureJourney.jsx";
 import ProductPreview from "./ProductPreview.jsx";
@@ -231,12 +233,22 @@ function Playground() {
             ))}
           </div>
         </fieldset>
-        <p className="demo-choice-status" role="status">
-          <span>Chain ID {network.chainId} · browser simulation</span>
-          <strong><Icon name={approval ? "shield-check" : "fingerprint"} />
-            {approval ? "World ID + phone confirmation" : "Phone confirmation"}
-          </strong>
-        </p>
+        <div className="demo-choice-summary">
+          <div className="demo-draft-amount" aria-hidden="true">
+            <span>Draft amount</span>
+            <b><CountUp to={amount.microEth / 1e6} motion={motion && !keyboard} /> ETH</b>
+          </div>
+          <p className="demo-choice-status" role="status">
+            <span>
+              <span className="demo-sr-only">{amount.label} ETH. </span>
+              Chain ID {network.chainId} · browser simulation
+            </span>
+            <strong>
+              <Icon name={approval ? "shield-check" : "fingerprint"} />
+              {approval ? "World ID + phone confirmation" : "Phone confirmation"}
+            </strong>
+          </p>
+        </div>
       </div>
       <div className="playground-grid">
         <div className="screen-context">
@@ -628,6 +640,7 @@ function Shield() {
 }
 const CLIENTS = ["Claude Desktop", "Codex", "Other MCP"];
 function Agents() {
+  const motion = useMotion();
   const [client, setClient] = useState(0),
     [state, setState] = useState("idle"),
     [copy, setCopy] = useState(false);
@@ -699,7 +712,7 @@ function Agents() {
         </div>
         <small>Sample configuration · external requests require World ID</small>
       </div>
-      <div className="agent-approval">
+      <SpotlightCard className="agent-approval" motion={motion}>
         <div className="agent-path">
           <Icon name="terminal-2" />
           <span />
@@ -763,7 +776,7 @@ function Agents() {
           </button>
         )}
         <small>Illustrative MCP flow. No live agent connected.</small>
-      </div>
+      </SpotlightCard>
     </div>
   );
 }

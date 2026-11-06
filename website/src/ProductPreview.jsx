@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import SpotlightCard from "./react-bits/SpotlightCard.jsx";
 import "./preview.css";
 
 const frames = [
@@ -76,7 +77,8 @@ export default function ProductPreview({ motion, Icon, Mark }) {
 
   return (
     <div className="preview-player" aria-label="Beam guided product preview">
-      <div className="preview-stage" key={index} data-motion={motion && started ? "on" : "off"}>
+      <SpotlightCard className="preview-stage" key={index} motion={motion}
+        data-motion={motion && started ? "on" : "off"}>
         <div className="preview-copy">
           <div className="preview-brand"><Mark /> <span>Beam</span></div>
           <h2>{frame.title}</h2>
@@ -91,7 +93,7 @@ export default function ProductPreview({ motion, Icon, Mark }) {
           </div>
           <div className="preview-device-button"><Icon name={frame.icon} /> <span>{index === 0 ? "Tap Beam" : "EVM testnet"}</span></div>
         </div>
-      </div>
+      </SpotlightCard>
       {!started && (
         <div className="demo-launch-layer">
           <button className="button light demo-launch" onClick={() => {
